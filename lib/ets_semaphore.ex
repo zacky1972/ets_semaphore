@@ -9,12 +9,19 @@ defmodule EtsSemaphore do
   @s :semaphore
   @w :waiting_list
 
+  @doc """
+  Creates a new semaphore named as an atom `s`.
+  """
   @spec new(t()) :: t()
   def new(s) do
     Ets.new(s, [:set, :public, :named_table])
     s
   end
 
+  @doc """
+  Acquires the given semaphore.
+  """
+  @spec acquire(t()) :: :ok
   def acquire(s) do
     case Ets.update_counter(s, @s, [{2, 0}, {2, 1}], {@s, 0}) do
       [0, _] ->
@@ -32,6 +39,10 @@ defmodule EtsSemaphore do
     end
   end
 
+  @doc """
+  Releases the given semaphore.
+  """
+  @spec release(t()) :: :ok
   def release(s) do
     [_, _] = Ets.update_counter(s, @s, [{2, 0}, {2, -1, 0, 0}])
     [w, _] = Ets.update_counter(s, @w, [{2, 0}, {2, -1, 0, 0}], {@w, 0})
@@ -53,6 +64,12 @@ defmodule EtsSemaphore do
     release_sub(s, w - 1)
   end
 
-  def delete(_s) do
+  @doc """
+  Deletes the given semaphore.
+  """
+  @spec delete(t()) :: :ok
+  def delete(s) do
+    Ets.delete(s)
+    :ok
   end
 end
