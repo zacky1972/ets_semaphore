@@ -7,7 +7,13 @@ defmodule EtsSemaphore.MixProject do
       version: "0.1.0",
       elixir: "~> 1.14",
       start_permanent: Mix.env() == :prod,
-      deps: deps()
+      deps: deps(),
+      name: "EtsSemaphore",
+      source_url: "https://github.com/zacky1972/ets_semaphore",
+      docs: [
+        main: "EtsSemaphore",
+        extras: ["README.md"]
+      ]
     ]
   end
 
